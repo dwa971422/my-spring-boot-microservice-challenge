@@ -4,7 +4,6 @@ import com.example.studentandteacher.model.Student;
 import com.example.studentandteacher.model.StudentDTO;
 import com.example.studentandteacher.model.StudentDTO.StudentDTOBuilder;
 import com.example.studentandteacher.repository.StudentRepository;
-import com.example.studentandteacher.repository.StudentTeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +14,10 @@ import java.util.stream.Collectors;
 @Service
 public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
-    private final StudentTeacherRepository studentTeacherRepository;
 
     @Autowired
-    public StudentServiceImpl(StudentRepository studentRepository, StudentTeacherRepository studentTeacherRepository) {
+    public StudentServiceImpl(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
-        this.studentTeacherRepository = studentTeacherRepository;
     }
 
     @Override
@@ -37,16 +34,13 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<StudentDTO> getAllStudentsByTeacherId(String teacherId) {
-        return studentTeacherRepository.findAllByTeacherId(teacherId)
+        return studentRepository.findAllByTeacherId(teacherId)
                 .stream()
-                .map(studentTeacher -> {
-                    Student student = studentTeacher.getStudent();
-                    return new StudentDTOBuilder()
-                            .setId(student.getId())
-                            .setName(student.getName())
-                            .setMajor(student.getMajor())
-                            .build();
-                })
+                .map(student -> new StudentDTOBuilder()
+                        .setId(student.getId())
+                        .setName(student.getName())
+                        .setMajor(student.getMajor())
+                        .build())
                 .collect(Collectors.toList());
     }
 

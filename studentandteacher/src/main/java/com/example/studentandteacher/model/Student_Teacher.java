@@ -26,12 +26,4 @@ public class Student_Teacher {
         this.student = student;
         this.teacher = teacher;
     }
-
-    public Student getStudent() {
-        return student;
-    }
-
-    public Teacher getTeacher() {
-        return teacher;
-    }
 }
